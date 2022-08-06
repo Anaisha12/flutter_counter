@@ -81,6 +81,8 @@ class _MyHomePageState extends State<MyHomePage> {
       // called again, and so nothing would appear to happen.
       _counter++;
       getHTTP();
+      print(_counter);
+      print(_bin_counter);
     });
   }
 
@@ -93,6 +95,8 @@ class _MyHomePageState extends State<MyHomePage> {
       // called again, and so nothing would appear to happen.
       _counter--;
       getHTTP();
+      print(_counter);
+      print(_bin_counter);
   });
   }
 
@@ -156,7 +160,7 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () {
                 _decrementCounter();
                 local.number=_counter;
-                local.bin_number;
+                local.bin_number=int.parse(_bin_counter);
               },
               tooltip: 'Decrement',
               child: const Icon(Icons.remove),
@@ -165,7 +169,7 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () {
                 _incrementCounter();
                 local.number=_counter;
-                local.bin_number;
+                local.bin_number=int.parse(_bin_counter);
               },
               tooltip: 'Increment',
               child: const Icon(Icons.add),
@@ -174,7 +178,6 @@ class _MyHomePageState extends State<MyHomePage> {
         )
         // This trailing comma makes auto-formatting nicer for build methods.
         );
-    debugPrint("$_counter");
   }
 }
 
