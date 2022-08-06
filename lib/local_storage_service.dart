@@ -1,12 +1,12 @@
 import 'package:shared_preferences/shared_preferences.dart';
-
+import'main.dart';
 class LocalStorageService {
+  var k=9;
   static late LocalStorageService _instance;
   static late SharedPreferences _preferences;
 
   static const String number_key = 'number';
   static const String bin_number_key = 'bin number';
-
   static Future<LocalStorageService> getInstance() async {
     _instance = LocalStorageService();
     _preferences = await SharedPreferences.getInstance();
@@ -40,8 +40,9 @@ class LocalStorageService {
   int get bin_number => _getFromDisk(bin_number_key);
 
   set number(int number) {
-    _saveToDisk(number_key, number);
+    _saveToDisk(number_key,number);
   }
+
   set bin_number(int bin_number) {
     _saveToDisk(bin_number_key, bin_number);
   }

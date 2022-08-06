@@ -1,15 +1,19 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_counter/LocalStorageService.dart';
+import 'package:flutter_counter/local_storage_service.dart';
 import 'package:get_it/get_it.dart';
+
 GetIt locator = GetIt.instance;
 
 Future<void> setupLocator() async {
   final localStorageService = await LocalStorageService.getInstance();
   locator.registerSingleton<LocalStorageService>(localStorageService);
 }
+LocalStorageService local = LocalStorageService();
 void main() {
   runApp(const MyApp());
 }
+
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -56,7 +60,18 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
-
+  String _bin_counter="";
+  void getHTTP() async{
+    try{
+      Response? response=await Dio().get("https://networkcalc.com/api/binary/${_counter+1}?from=10&to=2");
+      _bin_counter=response.data.toString();
+      List<String> t = _bin_counter.split(',');
+      _bin_counter =t[2].substring(12,t[2].length);
+    }
+    catch(e){
+      print("Error");
+    }
+  }
   void _incrementCounter() {
     setState(() {
       // This call to setState tells the Flutter framework that something has
@@ -65,6 +80,7 @@ class _MyHomePageState extends State<MyHomePage> {
       // _counter without calling setState(), then the build method would not be
       // called again, and so nothing would appear to happen.
       _counter++;
+      getHTTP();
     });
   }
 
@@ -76,11 +92,14 @@ class _MyHomePageState extends State<MyHomePage> {
       // _counter without calling setState(), then the build method would not be
       // called again, and so nothing would appear to happen.
       _counter--;
-    });
+      getHTTP();
+  });
   }
 
   @override
   Widget build(BuildContext context) {
+
+
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -120,6 +139,13 @@ class _MyHomePageState extends State<MyHomePage> {
                 '$_counter',
                 style: Theme.of(context).textTheme.headline4,
               ),
+              const Text(
+                'Binary number :',
+              ),
+              Text(
+                '$_bin_counter',
+                style: Theme.of(context).textTheme.headline4,
+              ),
             ],
           ),
         ),
@@ -127,14 +153,19 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             FloatingActionButton(
-              onPressed: _decrementCounter,
+              onPressed: () {
+                _decrementCounter();
+                local.number=_counter;
+                local.bin_number;
+              },
               tooltip: 'Decrement',
               child: const Icon(Icons.remove),
             ),
             FloatingActionButton(
-              onPressed:(){
+              onPressed: () {
                 _incrementCounter();
-                locator<LocalStorageService>.
+                local.number=_counter;
+                local.bin_number;
               },
               tooltip: 'Increment',
               child: const Icon(Icons.add),
@@ -143,5 +174,7 @@ class _MyHomePageState extends State<MyHomePage> {
         )
         // This trailing comma makes auto-formatting nicer for build methods.
         );
+    debugPrint("$_counter");
   }
 }
+
